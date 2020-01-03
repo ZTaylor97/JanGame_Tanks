@@ -13,7 +13,6 @@
 class Game
 {
 public:
-    Game();
     Game(int windowWidth, int windowHeight, std::string windowName);
     void run();
     ~Game();
