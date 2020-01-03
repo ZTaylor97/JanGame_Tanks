@@ -15,7 +15,7 @@ void Game::run()
     while(window.isOpen())
     {
         pollEvent();
-        dt = clock.restart().asSeconds();
+        dt = dtClock.restart().asSeconds();
         updateFrame();
         displayFrame();
     }
@@ -51,11 +51,15 @@ void Game::updateFrame()
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
     {
-        tanks.at(0).aimBarrel();
+        tanks.at(0).aimBarrel(true,false,dt);
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
     {
-        tanks.at(0).aimBarrel();
+        tanks.at(0).aimBarrel(false,true,dt);
+    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+    {
+        tanks.at(0).shoot(true,dt);
     }
     clampToScreen();
 }

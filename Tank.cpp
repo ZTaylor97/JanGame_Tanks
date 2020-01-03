@@ -8,7 +8,8 @@ Tank::Tank()
     tank.setSize(sf::Vector2f(30,20));
     tank.setPosition(sf::Vector2f(200,600));
     barrel.setSize(sf::Vector2f(5,20));
-    barrel.setPosition(sf::Vector2f(212.5f,585));
+    barrel.setOrigin(sf::Vector2f(2.5,20.0));
+    barrel.setPosition(sf::Vector2f(215,605));
 }
 
 Tank::~Tank()
@@ -30,8 +31,21 @@ void Tank::move(bool moveLeft, bool moveRight, float dt)
     }
 }
 
-void Tank::aimBarrel()
+void Tank::aimBarrel(bool aimLeft, bool aimRight, float dt)
 {
-    
+     if(aimLeft)
+    {
+        barrel.rotate(-10.0*dt);
+    }
+    if(aimRight)
+    {
+        barrel.rotate(10.0*dt);
+    }
 }
 
+void Tank::shoot(bool isFiring)
+{
+    sf::FloatRect temp = barrel.getGlobalBounds();
+    bullet.setSize(sf::Vector2f(10,10));
+    bullet.setPosition(sf::Vector2f(300,temp.top));
+}

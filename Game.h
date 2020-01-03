@@ -20,7 +20,7 @@ private:
     // Variables
     std::vector<Tank> tanks;
     sf::RenderWindow window;
-    sf::Clock clock;
+    sf::Clock dtClock;
     float dt;
     //Game functions
     void pollEvent();
