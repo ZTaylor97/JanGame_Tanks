@@ -27,9 +27,8 @@ void Game::pollEvent()
     sf::Event event;
     while (window.pollEvent(event))
     {
-        switch (event.type)
+        if (event.type == sf::Event::Closed)
         {
-        case sf::Event::Closed:
             window.close();
             break;
         }
@@ -59,7 +58,7 @@ void Game::updateFrame()
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
-        tanks.at(0).shoot(true,dt);
+        bulletExists = tanks.at(0).shoot(true,dt);
     }
     clampToScreen();
 }
@@ -70,6 +69,8 @@ void Game::displayFrame()
     // Drawing stuff to the screen goes here
     window.draw(tanks.at(0).getTank());
     window.draw(tanks.at(0).getBarrel());
+    
+    if(bulletExists) window.draw(tanks.at(0).getBullet());
     
     window.display();
 }

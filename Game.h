@@ -22,6 +22,7 @@ private:
     sf::RenderWindow window;
     sf::Clock dtClock;
     float dt;
+    bool bulletExists;
     //Game functions
     void pollEvent();
     void updateFrame();
