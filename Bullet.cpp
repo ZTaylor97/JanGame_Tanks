@@ -1,8 +1,10 @@
 #include "Bullet.h"
 
-Bullet::Bullet(sf::FloatRect Coords, float barrelRotation, float velocity)
-    : angle{barrelRotation * (3.1415/180)}, bulletVelocity{velocity}
+Bullet::Bullet(sf::Vector2f Coords, float barrelRotation, float velocity)
+    : angle{barrelRotation * (3.1415f/180)}, bulletVelocity{velocity}
 {
+    bullet.setSize(sf::Vector2f(5,5));
+    bullet.setPosition(Coords);
 }
 
 Bullet::~Bullet()

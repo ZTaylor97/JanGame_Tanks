@@ -38,8 +38,45 @@ void Game::pollEvent()
 void Game::updateFrame()
 {
     /* Moving stuff on the screen goes here */
-
+    controlTank();
     //  Temporary code to handle player movement, will change this once the game is properly turn based
+    
+    clampToScreen();
+}
+
+void Game::displayFrame()
+{
+    window.clear();
+    // Drawing stuff to the screen goes here
+    window.draw(tanks.at(0).getTank());
+    window.draw(tanks.at(0).getBarrel());
+    
+    for(auto Bullet: tanks.at(0).getBullets())
+    {
+        window.draw(Bullet.getBullet());
+    }
+    
+    window.display();
+}
+
+// Doesn't do anything yet but will prevent tanks and projectiles from leaving the screen
+void Game::clampToScreen()
+{
+    
+}
+
+// Short helper function to initialise multiple tanks if necessary
+void Game::initialiseTanks(int numTanks)
+{
+    Tank tank(100.0f, 300.0f,500.0f);
+    for(int i = 0;i<numTanks;i++)
+    {
+        tanks.push_back(tank);
+    }
+}
+
+void Game::controlTank()
+{
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     {
         tanks.at(0).move(true,false,dt);
@@ -58,33 +95,6 @@ void Game::updateFrame()
     }
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
     {
-        bulletExists = tanks.at(0).shoot(true,dt);
-    }
-    clampToScreen();
-}
-
-void Game::displayFrame()
-{
-    window.clear();
-    // Drawing stuff to the screen goes here
-    window.draw(tanks.at(0).getTank());
-    window.draw(tanks.at(0).getBarrel());
-    
-    window.display();
-}
-
-// Doesn't do anything yet but will prevent tanks and projectiles from leaving the screen
-void Game::clampToScreen()
-{
-    
-}
-
-// Short helper function to initialise multiple tanks if necessary
-void Game::initialiseTanks(int numTanks)
-{
-    Tank tank;
-    for(int i = 0;i<numTanks;i++)
-    {
-        tanks.push_back(tank);
+        tanks.at(0).shoot(dt);
     }
 }

@@ -29,6 +29,7 @@ private:
     void displayFrame();
     void clampToScreen();
     void initialiseTanks(int numTanks);
+    void controlTank();
 };
 
 #endif // GAME_H

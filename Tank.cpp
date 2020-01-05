@@ -1,15 +1,16 @@
 #include "Tank.h"
 
 // TODO: Clean up once basic functionality is in place
-Tank::Tank()
+Tank::Tank(float tank_speed, float x_pos, float y_pos)
+    : moveSpeed{tank_speed}
 {
     // Constructor needs a lot of streamlining
-    moveSpeed = 100.0f;
     tank.setSize(sf::Vector2f(30,20));
-    tank.setPosition(sf::Vector2f(200,600));
+    tank.setOrigin(15,5);
+    tank.setPosition(sf::Vector2f(x_pos,y_pos));
     barrel.setSize(sf::Vector2f(5,20));
     barrel.setOrigin(sf::Vector2f(2.5,20.0));
-    barrel.setPosition(sf::Vector2f(215,605));
+    barrel.setPosition(sf::Vector2f(tank.getPosition().x,tank.getPosition().y));
 }
 
 Tank::~Tank()
@@ -46,11 +47,11 @@ void Tank::aimBarrel(bool aimLeft, bool aimRight, float dt)
     }
 }
 
-bool Tank::shoot(bool isFiring, float dt)
+void Tank::shoot(float dt)
 {
-    hasShot = true;
-    sf::FloatRect temp = barrel.getGlobalBounds();
+    sf::FloatRect temp(barrel.getGlobalBounds());
+    sf::Vector2f Coords(temp.left,temp.top);
     float angle = barrel.getRotation();
-    Bullet bullet(temp,angle, 10);
-    return true;
+    Bullet bullet(Coords, angle, 10);
+    bullets.push_back(bullet);
 }

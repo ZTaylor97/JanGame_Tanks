@@ -5,7 +5,7 @@
 class Bullet
 {
 public:
-    Bullet(sf::FloatRect Coords, float barrelRotation, float velocity);
+    Bullet(sf::Vector2f Coords, float barrelRotation, float velocity);
     virtual ~Bullet();
     sf::RectangleShape getBullet() {return bullet;}
     void moveBullet(float dt);
@@ -13,6 +13,7 @@ private:
     sf::RectangleShape bullet;
     float angle;
     float bulletVelocity;
+    enum bulletType {Normal, Large, Fast};
     
 };
 
