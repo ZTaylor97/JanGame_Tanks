@@ -70,8 +70,6 @@ void Game::displayFrame()
     window.draw(tanks.at(0).getTank());
     window.draw(tanks.at(0).getBarrel());
     
-    if(bulletExists) window.draw(tanks.at(0).getBullet());
-    
     window.display();
 }
 
