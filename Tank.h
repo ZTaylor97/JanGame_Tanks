@@ -17,12 +17,12 @@ public:
     void shoot(float dt);
     sf::RectangleShape getTank() {return tank;}
     sf::RectangleShape getBarrel() {return barrel;}
-    std::vector<Bullet> getBullets(){return bullets;}
-    void moveBullet(float dt);
+    std::vector<Bullet>* getBullets(){return bullets;}
+    void clampToScreen(int screenWidth, int screenHeight);
 private:
     sf::RectangleShape tank;
     sf::RectangleShape barrel;
-    std::vector<Bullet> bullets;
+    std::vector<Bullet> *bullets;
     float moveSpeed;
     float barrelAngle;
     bool hasShot;

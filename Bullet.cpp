@@ -1,26 +1,27 @@
 #include "Bullet.h"
 
 Bullet::Bullet(sf::Vector2f Coords, float barrelRotation, float velocity)
-    : angle{barrelRotation * (3.1415f/180)}, bulletVelocity{velocity}
+    : angle{barrelRotation}, bulletVelocity{velocity}
 {
     bullet.setSize(sf::Vector2f(5,5));
     bullet.setPosition(Coords);
+    angle = angle * (3.14159/180);
+    xRatio = sin(angle);
+    yRatio = -cos(angle);
+    bulletVelocity_X = bulletVelocity*xRatio;
+    bulletVelocity_Y = bulletVelocity*yRatio;
+    windFactor = 0.01f;
 }
 
 Bullet::~Bullet()
 {
 }
 
-void Bullet::moveBullet(float dt)
+// keep windfactor in the same scale of magnitude as gravity ( 0.0x)
+void Bullet::moveBullet(float dt, float windFactor)
 {
-    float xRatio = sin(angle);
-    float yRatio;
-    if(sin(angle)<0) yRatio = 1+sin(angle);
-    else yRatio = 1-sin(angle);
-
-    float Velocity_X = (bulletVelocity*xRatio*dt);
-    float Velocity_Y = (-bulletVelocity *yRatio*dt);
-    
-    bullet.move(sf::Vector2f(Velocity_X,Velocity_Y-0.5));
+    bulletVelocity_Y += 0.05f;
+    bulletVelocity_X += windFactor;
+    bullet.move(sf::Vector2f(bulletVelocity_X*dt, bulletVelocity_Y*dt));
 }
 

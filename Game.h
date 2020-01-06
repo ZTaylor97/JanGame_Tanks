@@ -21,6 +21,7 @@ private:
     std::vector<Tank> tanks;
     sf::RenderWindow window;
     sf::Clock dtClock;
+    sf::Clock shootTimer;
     float dt;
     bool bulletExists;
     //Game functions
@@ -29,7 +30,7 @@ private:
     void displayFrame();
     void clampToScreen();
     void initialiseTanks(int numTanks);
-    void controlTank();
+    void controlTank(int tank_index);
 };
 
 #endif // GAME_H
