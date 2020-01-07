@@ -31,6 +31,7 @@ private:
     void clampToScreen();
     void initialiseTanks(int numTanks);
     void controlTank(int tank_index);
+    void selectTank();
 };
 
 #endif // GAME_H

@@ -51,11 +51,11 @@ void Tank::aimBarrel(bool aimLeft, bool aimRight, float dt)
 void Tank::shoot(float dt)
 {
     sf::FloatRect temp(barrel.getGlobalBounds());
-    
     sf::Vector2f Coords(temp.left,temp.top);
     float angle = barrel.getRotation();
-    Bullet bullet(Coords, angle, 100);
+    Bullet bullet(Coords, angle, 20);
     bullets->push_back(bullet);
+    shotsTaken++;
 }
 
 void Tank::clampToScreen(int screenWidth, int screenHeight)

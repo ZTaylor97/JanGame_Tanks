@@ -3,6 +3,7 @@
 Game::Game(int windowWidth, int windowHeight, std::string windowName)
     : window(sf::VideoMode(windowWidth,windowHeight), windowName)
 {
+    window.setFramerateLimit(60);
 }
 Game::~Game()
 {
@@ -12,13 +13,12 @@ Game::~Game()
 void Game::run()
 {
     shootTimer.restart();
-    initialiseTanks(2);
+    initialiseTanks(20);
     while(window.isOpen())
     {
         pollEvent();
         dt = dtClock.restart().asSeconds();
         updateFrame();
-        tanks.at(0).getBarrel().getGlobalBounds();
         displayFrame();
     }
 }
@@ -40,13 +40,14 @@ void Game::pollEvent()
 void Game::updateFrame()
 {
     /* Moving stuff on the screen goes here */
-    controlTank(0);
-    for(auto tank: tanks)
+    for (size_t i = 0; i< tanks.size(); i++)
     {
-        for(size_t i = 0; i<tank.getBullets()->size(); i++)
+        for(size_t j = 0; j<tanks.at(i).getBullets()->size(); j++)
         {
-            tank.getBullets()->at(i).moveBullet(dt, 0.001);
+            tanks.at(i).getBullets()->at(j).moveBullet(dt, 0.001);
         }
+        if(tanks.at(i).isActive) controlTank(i);
+        selectTank();
     }
     //  Temporary code to handle player movement, will change this once the game is properly turn based
     
@@ -93,6 +94,7 @@ void Game::initialiseTanks(int numTanks)
     {
         tanks.push_back(tank);
     }
+    tanks.at(0).isActive = true;
 }
 
 void Game::controlTank(int tank_index)
@@ -114,11 +116,28 @@ void Game::controlTank(int tank_index)
     {
         tanks.at(tank_index).aimBarrel(false,true,dt);
     }
-    
     float elapsedTime = shootTimer.getElapsedTime().asSeconds();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)&& elapsedTime >=0.5)
     {
         tanks.at(tank_index).shoot(dt);
         shootTimer.restart();
     }
+}
+
+void Game::selectTank()
+{
+    for (size_t i = 0; i < tanks.size();i++)
+    {
+        if(tanks.at(i).getShotsTaken() == 5)
+        {
+            tanks.at(i).isActive = false;
+            tanks.at(i).resetShotsTaken();
+            if(i+1 < tanks.size())
+            {
+                tanks.at(i+1).isActive = true;
+            } else
+                tanks.front().isActive = true;
+        }
+    }
+    
 }

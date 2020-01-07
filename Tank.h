@@ -19,6 +19,9 @@ public:
     sf::RectangleShape getBarrel() {return barrel;}
     std::vector<Bullet>* getBullets(){return bullets;}
     void clampToScreen(int screenWidth, int screenHeight);
+    int getShotsTaken() { return shotsTaken;}
+    void resetShotsTaken() { shotsTaken=0;}
+    bool isActive = false;
 private:
     sf::RectangleShape tank;
     sf::RectangleShape barrel;
@@ -26,6 +29,7 @@ private:
     float moveSpeed;
     float barrelAngle;
     bool hasShot;
+    int shotsTaken = 0;
 };
 
 #endif // TANK_H
