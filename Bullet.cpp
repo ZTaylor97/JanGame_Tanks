@@ -20,8 +20,8 @@ Bullet::~Bullet()
 // keep windfactor in the same scale of magnitude as gravity
 void Bullet::moveBullet(float dt, float windFactor)
 {
-    bulletVelocity_Y += 0.01f;
-    bulletVelocity_X += windFactor;
+    bulletVelocity_Y += 175.0f*dt;
+    bulletVelocity_X += windFactor*dt;
     bullet.move(sf::Vector2f(bulletVelocity_X*dt, bulletVelocity_Y*dt));
 }
 
