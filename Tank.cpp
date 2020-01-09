@@ -12,6 +12,7 @@ Tank::Tank(float tank_speed, float x_pos, float y_pos)
     barrel.setOrigin(sf::Vector2f(2.5,20.0));
     barrel.setPosition(sf::Vector2f(tank.getPosition().x,tank.getPosition().y));
     bullets = new std::vector<Bullet>;
+    shootTimer.restart();
 }
 
 Tank::~Tank()
@@ -19,32 +20,51 @@ Tank::~Tank()
 }
 
 // TODO - this function works as required but it's dodgy, fix it!
-void Tank::move(bool moveLeft, bool moveRight, float dt)
+void Tank::controlTank(float dt, float turnTime, float cooldownTime)
 {
-    if(moveLeft)
+    bool outOfBounds = barrel.getRotation()> 90 && barrel.getRotation() <270;
+    clampToScreen(1280,720);
+    
+    // Tank movement
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
     {
+        hasMoved = true;
         tank.move(-moveSpeed*dt,0);
         barrel.move(-moveSpeed*dt,0);
     }
-    if(moveRight)
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
     {
+        hasMoved = true;
         tank.move(moveSpeed*dt,0);
         barrel.move(moveSpeed*dt,0);
     }
-}
-
-void Tank::aimBarrel(bool aimLeft, bool aimRight, float dt)
-{
-    bool outOfBounds = barrel.getRotation()> 90 && barrel.getRotation() <270;
-    if(aimLeft)
+    
+    // Barrel Rotation
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
     {
+        hasMoved = true;
         barrel.rotate(-25.0*dt);
-        if(outOfBounds) barrel.rotate(0.5);
-    }
-    else if(aimRight)
+        while(outOfBounds) 
+        {
+            barrel.rotate(0.01);
+            outOfBounds = barrel.getRotation()> 90 && barrel.getRotation() <270;
+        }
+    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
     {
+        hasMoved = true;
         barrel.rotate(25.0*dt);
-        if(outOfBounds) barrel.rotate(-0.5);
+        while(outOfBounds) 
+        {
+            barrel.rotate(-0.01);
+            outOfBounds = barrel.getRotation()> 90 && barrel.getRotation() <270;
+        }
+    }
+    
+    float shootTime = shootTimer.getElapsedTime().asSeconds();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)&& shootTime >=0.5 && (turnTime >= cooldownTime || hasMoved))
+    {
+        shoot(dt);
+        shootTimer.restart();
     }
 }
 
@@ -52,8 +72,7 @@ void Tank::shoot(float dt)
 {
     sf::FloatRect temp(barrel.getGlobalBounds());
     sf::Vector2f Coords(temp.left,temp.top);
-    float angle = barrel.getRotation();
-    Bullet bullet(Coords, angle, 400);
+    Bullet bullet(Coords, barrel.getRotation(), 400, 0.01);
     bullets->push_back(bullet);
     shotsTaken++;
 }

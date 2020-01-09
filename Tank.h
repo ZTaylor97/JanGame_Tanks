@@ -10,26 +10,32 @@
 class Tank
 {
 public:
+    // constructors, destructors etc
     Tank(float tank_speed, float x_Pos, float y_Pos);
     virtual ~Tank();
-    void move(bool moveLeft, bool moveRight, float deltaTime);
-    void aimBarrel(bool aimLeft, bool aimRight, float dt);
+    // Gameplay related functions
+    void controlTank(float deltaTime, float turnTime, float cooldownTime);
     void shoot(float dt);
+    void clampToScreen(int screenWidth, int screenHeight);
+    // Getters and Setters
     sf::RectangleShape getTank() {return tank;}
     sf::RectangleShape getBarrel() {return barrel;}
     std::vector<Bullet>* getBullets(){return bullets;}
-    void clampToScreen(int screenWidth, int screenHeight);
+    void set_hasMoved(bool hasMoved_) { hasMoved = hasMoved_;}
     int getShotsTaken() { return shotsTaken;}
     void resetShotsTaken() { shotsTaken=0;}
+    // Public variables -- TODO: remove these unless absolutely necessary
     bool isActive = false;
 private:
     sf::RectangleShape tank;
     sf::RectangleShape barrel;
+    sf::Clock shootTimer;
     std::vector<Bullet> *bullets;
     float moveSpeed;
-    float barrelAngle;
     bool hasShot;
+    bool hasMoved = false;
     int shotsTaken = 0;
+    float health = 200.0f;
 };
 
 #endif // TANK_H

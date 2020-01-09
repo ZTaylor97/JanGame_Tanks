@@ -1,12 +1,11 @@
 #include "Game.h"
 
 Game::Game(int windowWidth, int windowHeight, std::string windowName, int numberTanks)
-    : window(sf::VideoMode(windowWidth,windowHeight), windowName)
+    : window(sf::VideoMode(windowWidth,windowHeight), windowName), numTanks{numberTanks}
 {
     window.setFramerateLimit(60);
-    numTanks = numberTanks;
-    turnTime.restart();
-    shootTimer.restart();
+    initialiseTanks(numberTanks);
+    turnTimer.restart();
 }
 Game::~Game()
 {
@@ -15,7 +14,6 @@ Game::~Game()
 // Game functions
 void Game::run()
 {
-    initialiseTanks(numTanks);
     while(window.isOpen())
     {
         pollEvent();
@@ -53,12 +51,13 @@ void Game::updateFrame()
         {
             tanks.at(i).getBullets()->at(j).moveBullet(frameTime/numTanks, 0.001);
         }
-        if(tanks.at(i).isActive) controlTank(i);
+        if(tanks.at(i).isActive)
+        {
+            float turnTime = turnTimer.getElapsedTime().asSeconds();
+            tanks.at(i).controlTank(dt, turnTime, 5.0f);
+        }
         selectTank();
     }
-    //  Temporary code to handle player movement, will change this once the game is properly turn based
-    
-    clampToScreen();
 }
 
 void Game::displayFrame()
@@ -70,20 +69,12 @@ void Game::displayFrame()
     window.setView(gameView);
     drawTanksAndBullets();
     
-    
+    // Will one day draw some sort of HUD, enjoy the programmer UI
     window.setView(hudView);
     drawHUD();
     
-    
     window.display();
 }
-
-// Doesn't do anything yet but will prevent tanks and projectiles from leaving the screen
-void Game::clampToScreen()
-{
-    tanks.at(0).clampToScreen(1280,720);
-}
-
 // Short helper function to initialise multiple tanks if necessary
 void Game::initialiseTanks(int numTanks)
 {
@@ -96,51 +87,21 @@ void Game::initialiseTanks(int numTanks)
     tanks.at(0).isActive = true;
 }
 
-void Game::controlTank(int tank_index)
-{
-    // Movement controls
-    
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-    {
-        tanks.at(tank_index).move(true,false,dt);
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    {
-        tanks.at(tank_index).move(false,true,dt);
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-    {
-        tanks.at(tank_index).aimBarrel(true,false,dt);
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-    {
-        tanks.at(tank_index).aimBarrel(false,true,dt);
-    }
-    float elapsedTime = shootTimer.getElapsedTime().asSeconds();
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)&& elapsedTime >=0.5)
-    {
-        tanks.at(tank_index).shoot(dt);
-        shootTimer.restart();
-    }
-}
-
 // Switches to next player based on how many shots they have taken
 void Game::selectTank()
 {
     for (size_t i = 0; i < tanks.size();i++)
     {
-        if(tanks.at(i).getShotsTaken() == 5)
+        if(tanks.at(i).getShotsTaken() >= 5)
         {
+            tanks.at(i).set_hasMoved(false);
             tanks.at(i).isActive = false;
             tanks.at(i).resetShotsTaken();
-            if(i+1 < tanks.size())
-            {
-                tanks.at(i+1).isActive = true;
-            } else
-                tanks.front().isActive = true;
+            if(i+1 < tanks.size()) tanks.at(i+1).isActive = true;
+            else tanks.front().isActive = true;
+            turnTimer.restart();
         }
     }
-    
 }
 
 void Game::drawHUD()
