@@ -58,6 +58,7 @@ void Game::updateFrame()
         }
         selectTank();
     }
+    bulletCollision();
 }
 
 void Game::displayFrame()
@@ -128,6 +129,24 @@ void Game::drawTanksAndBullets()
             if(outOfBounds)
             {
                 tank.getBullets()->erase(tank.getBullets()->begin()+i);
+            }
+        }
+    }
+}
+
+void Game::bulletCollision()
+{
+    for(auto tank: tanks)
+    {
+        for(size_t i = 0; i<tank.getBullets()->size(); i++)
+        {
+            // Lord have mercy on this if statement || FIX THIS YA IDIOT ||
+            if(tank.getTank().getGlobalBounds().intersects(tank.getBullets()->at(i).getBullet().getGlobalBounds()))
+            {
+                tank.getBullets()->erase(tank.getBullets()->begin()+i);
+                std::cout << "Poop" << std::endl;
+                tank.takeDamage(20.0f);
+                std::cout << tank.getHealth() << std::endl;
             }
         }
     }

@@ -24,6 +24,8 @@ public:
     void set_hasMoved(bool hasMoved_) { hasMoved = hasMoved_;}
     int getShotsTaken() { return shotsTaken;}
     void resetShotsTaken() { shotsTaken=0;}
+    float getHealth() {return health;}
+    void takeDamage(int damage) {health -=damage;}
     // Public variables -- TODO: remove these unless absolutely necessary
     bool isActive = false;
 private:

@@ -37,6 +37,7 @@ private:
     void selectTank();
     void drawHUD();
     void drawTanksAndBullets();
+    void bulletCollision();
 };
 
 #endif // GAME_H

@@ -71,7 +71,9 @@ void Tank::controlTank(float dt, float turnTime, float cooldownTime)
 void Tank::shoot(float dt)
 {
     sf::FloatRect temp(barrel.getGlobalBounds());
-    sf::Vector2f Coords(temp.left,temp.top);
+    sf::Vector2f Coords;
+    if(barrel.getRotation()<=90) Coords = sf::Vector2f(barrel.getPosition().x+temp.width,barrel.getPosition().y-temp.height);
+    else Coords = sf::Vector2f(temp.left,temp.top);
     Bullet bullet(Coords, barrel.getRotation(), 400, 0.01);
     bullets->push_back(bullet);
     shotsTaken++;
