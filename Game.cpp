@@ -144,7 +144,6 @@ void Game::bulletCollision()
             if(tank.getTank().getGlobalBounds().intersects(tank.getBullets()->at(i).getBullet().getGlobalBounds()))
             {
                 tank.getBullets()->erase(tank.getBullets()->begin()+i);
-                std::cout << "Poop" << std::endl;
                 tank.takeDamage(20.0f);
                 std::cout << tank.getHealth() << std::endl;
             }
